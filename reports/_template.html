@@ -221,25 +221,46 @@
     background: #fff;
     border: 2px dashed #c9b3d8;
     border-radius: 16px;
-    padding: 22px 28px 26px;
+    padding: 20px 28px 26px;
   }
+  .opinion-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .opinion-avatar {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .opinion-avatar svg { display: block; width: 100%; height: 100%; }
   .opinion-title {
     font-size: 19px;
     font-weight: 800;
     color: var(--ink);
-    margin-bottom: 4px;
+    flex: 1;
   }
-  .opinion-hint {
-    font-size: 13px;
-    color: var(--sub);
-    margin-bottom: 16px;
+  .opinion-edit-link {
+    font-family: 'GT America', 'Pretendard', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--purple);
+    text-decoration: none;
+    border: 1px solid var(--retail-bg);
+    background: var(--retail-bg);
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
   }
+  .opinion-edit-link:hover { text-decoration: underline; }
   .opinion-content {
     min-height: 120px;
     font-size: 15.5px;
     line-height: 1.65;
     color: var(--ink);
-    outline: none;
+    margin-top: 16px;
     border-top: 1px solid var(--line);
     padding-top: 14px;
     white-space: pre-wrap;
@@ -355,9 +376,28 @@
   </div>
   <div class="opinion-section">
     <div class="opinion-box">
-      <div class="opinion-title">📝 담당자 코멘트</div>
-      <div class="opinion-hint">이번 주 리포트를 보고 느낀 의견이나 챙겨야 할 액션을 자유롭게 적어주세요.</div>
-      <div class="opinion-content" contenteditable="true" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
+      <div class="opinion-header">
+        <div class="opinion-avatar">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="32" fill="#EAE3F0"/>
+            <path d="M9 64c1-14 9.5-21 23-21s22 7 23 21z" fill="#1B2A4E"/>
+            <path d="M25 41 L32 50 L39 41 L34 37 L30 37 Z" fill="#FFFFFF"/>
+            <path d="M29.3 39.5 L32 44 L34.7 39.5 L33.6 58 L32 62 L30.4 58 Z" fill="#3E6EA5"/>
+            <rect x="26" y="32" width="12" height="13" rx="5" fill="#F3C9A3"/>
+            <circle cx="32" cy="25" r="15" fill="#F6D2AA"/>
+            <path d="M17 24C16 10.5 24 5.5 32 5.5C40 5.5 48 10.5 47 24C46 16.5 42 12.5 37 14.5C34 18.5 30 18.5 27 14.5C22 12.5 18 16.5 17 24Z" fill="#241E1B"/>
+            <circle cx="26" cy="26.5" r="5.6" fill="none" stroke="#2b2b2b" stroke-width="1.6"/>
+            <circle cx="38" cy="26.5" r="5.6" fill="none" stroke="#2b2b2b" stroke-width="1.6"/>
+            <line x1="31.4" y1="26.5" x2="32.6" y2="26.5" stroke="#2b2b2b" stroke-width="1.6"/>
+            <line x1="20.4" y1="25.5" x2="17" y2="24.5" stroke="#2b2b2b" stroke-width="1.6"/>
+            <line x1="43.6" y1="25.5" x2="47" y2="24.5" stroke="#2b2b2b" stroke-width="1.6"/>
+            <path d="M28 33Q32 35.5 36 33" stroke="#9c6a4e" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="opinion-title">📝 담당자 코멘트</div>
+        <a class="opinion-edit-link" href="https://github.com/byungwoo135/nosa-trend-weekly/edit/main/reports/{{REPORT_FILENAME}}" target="_blank" rel="noopener">✏️ GitHub에서 편집</a>
+      </div>
+      <div class="opinion-content" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
     </div>
   </div>
 </body>
