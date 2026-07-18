@@ -10,21 +10,24 @@
     font-weight: 45 920;
   }
   :root {
-    --navy: #101b33;
-    --navy-2: #1c2c4f;
+    /* Kurly Nextmile BI Guideline: Main Color = Kurly Purple, Sub Color = Nextmile Orange */
+    --purple: #5f0080;
+    --purple-2: #3d0053;
+    --orange: #ff7b3c;
+    --orange-text: #b8501a;   /* darkened for AA text contrast on light bg */
     --ink: #16213e;
     --sub: #5b6474;
     --line: #e7e9ee;
     --paper: #f7f8fb;
-    --retail: #0e7c66;      /* 유통업계 accent */
-    --retail-bg: #e9f6f2;
-    --other: #b5560f;       /* 유통업계 외 accent */
-    --other-bg: #fbeee0;
+    --retail: var(--purple);        /* 유통업계 accent */
+    --retail-bg: #f2e6f7;
+    --other: var(--orange-text);    /* 타 산업군 accent */
+    --other-bg: #fdeee0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 1080px; height: 1350px;
-    font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-family: 'SD산돌고딕Neo1', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
     background: var(--paper);
     color: var(--ink);
     overflow: hidden;
@@ -35,16 +38,18 @@
     flex-direction: column;
   }
   .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-2) 100%);
     color: #fff;
-    padding: 56px 64px 44px;
+    padding: 56px 64px 40px;
     position: relative;
+    border-bottom: 6px solid var(--orange);
   }
   .eyebrow {
+    font-family: 'GT America', 'Pretendard', sans-serif;
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: #9db4e8;
+    color: var(--orange);
     margin-bottom: 14px;
   }
   .title {
@@ -56,7 +61,7 @@
     margin-top: 16px;
     font-size: 24px;
     font-weight: 500;
-    color: #c7d2f0;
+    color: #e3c6f0;
   }
   .body {
     flex: 1;
@@ -83,6 +88,7 @@
     margin-bottom: 18px;
   }
   .tag {
+    font-family: 'GT America', 'Pretendard', sans-serif;
     font-size: 15px;
     font-weight: 700;
     padding: 5px 12px;
@@ -105,8 +111,8 @@
     width: 8px; height: 8px; border-radius: 50%;
     margin-top: 10px; flex-shrink: 0;
   }
-  .section.retail .item .dot { background: var(--retail); }
-  .section.other .item .dot { background: var(--other); }
+  .section.retail .item .dot { background: var(--purple); }
+  .section.other .item .dot { background: var(--orange); }
   .item-body { flex: 1; }
   .item-headline {
     font-size: 20px;
@@ -156,7 +162,7 @@
         </div>
       </div>
       <div class="section other">
-        <div class="section-title">🏢 유통업계 외 <span class="tag">GENERAL</span></div>
+        <div class="section-title">🏢 타 산업군 <span class="tag">OTHER</span></div>
         <div class="items">
           <div class="item">
             <div class="dot"></div>

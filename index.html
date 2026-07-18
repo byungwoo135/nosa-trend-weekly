@@ -11,8 +11,10 @@
     font-weight: 45 920;
   }
   :root {
-    --navy: #101b33;
-    --navy-2: #1c2c4f;
+    /* Kurly Nextmile BI Guideline: Main Color = Kurly Purple, Sub Color = Nextmile Orange */
+    --purple: #5f0080;
+    --purple-2: #3d0053;
+    --orange: #ff7b3c;
     --ink: #16213e;
     --sub: #5b6474;
     --line: #e7e9ee;
@@ -20,21 +22,23 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-family: 'SD산돌고딕Neo1', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
     background: var(--paper);
     color: var(--ink);
   }
   header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-2) 100%);
     color: #fff;
-    padding: 64px 24px 48px;
+    padding: 64px 24px 44px;
     text-align: center;
+    border-bottom: 5px solid var(--orange);
   }
   header .eyebrow {
+    font-family: 'GT America', 'Pretendard', sans-serif;
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 1px;
-    color: #9db4e8;
+    color: var(--orange);
     margin-bottom: 10px;
   }
   header h1 {
@@ -44,7 +48,7 @@
   header p {
     margin-top: 10px;
     font-size: 15px;
-    color: #c7d2f0;
+    color: #e3c6f0;
   }
   main {
     max-width: 1000px;
@@ -101,7 +105,7 @@
   <header>
     <div class="eyebrow">WEEKLY HR TREND REPORT</div>
     <h1>노사동향 위클리</h1>
-    <p>유통업계와 유통업계 외 노사동향을 매주 한 장으로 정리합니다</p>
+    <p>유통업계와 타 산업군 노사동향을 매주 한 장으로 정리합니다</p>
   </header>
   <main>
     <div class="grid" id="archive">
