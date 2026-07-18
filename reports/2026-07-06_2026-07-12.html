@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>노사동향 리포트 2026.07.06 ~ 2026.07.12</title>
+<style>
+  @font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+    font-weight: 45 920;
+  }
+  :root {
+    --navy: #101b33;
+    --navy-2: #1c2c4f;
+    --ink: #16213e;
+    --sub: #5b6474;
+    --line: #e7e9ee;
+    --paper: #f7f8fb;
+    --retail: #0e7c66;
+    --retail-bg: #e9f6f2;
+    --other: #b5560f;
+    --other-bg: #fbeee0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1350px;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  .card {
+    width: 1080px; height: 1350px;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: #fff;
+    padding: 56px 64px 44px;
+    position: relative;
+  }
+  .eyebrow {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #9db4e8;
+    margin-bottom: 14px;
+  }
+  .title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .date-range {
+    margin-top: 16px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #c7d2f0;
+  }
+  .body {
+    flex: 1;
+    padding: 40px 64px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .section {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px 32px 30px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+  .tag {
+    font-size: 15px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .section.retail .tag { background: var(--retail-bg); color: var(--retail); }
+  .section.other .tag { background: var(--other-bg); color: var(--other); }
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+  }
+  .item {
+    display: flex;
+    gap: 14px;
+  }
+  .item .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin-top: 10px; flex-shrink: 0;
+  }
+  .section.retail .item .dot { background: var(--retail); }
+  .section.other .item .dot { background: var(--other); }
+  .item-body { flex: 1; }
+  .item-headline {
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .item-summary {
+    font-size: 16px;
+    color: var(--sub);
+    line-height: 1.55;
+  }
+  .item-source {
+    font-size: 13px;
+    color: #97a0b3;
+    margin-top: 6px;
+  }
+  .footer {
+    padding: 24px 64px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #9aa3b5;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="eyebrow">WEEKLY HR TREND REPORT</div>
+      <div class="title">노사동향 주간 리포트</div>
+      <div class="date-range">2026.07.06 ~ 2026.07.12</div>
+    </div>
+    <div class="body">
+      <div class="section retail">
+        <div class="section-title">🏬 유통업계 <span class="tag">RETAIL</span></div>
+        <div class="items">
+          <div class="item">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">홈플러스 회생절차 폐지…마트노조 비상투쟁</div>
+              <div class="item-summary">서울회생법원이 회생계획의 실행가능성 부족을 이유로 회생절차 폐지를 결정했다. 마트산업노조는 DIP 자금 확보 실패 시 청산이 불가피하다며 정부에 긴급조치를 요구했다.</div>
+              <div class="item-source">파이낸셜뉴스 · 2026.07.04</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">쿠팡 퀵플렉스, 표준계약서 이후도 장시간 근무 논란</div>
+              <div class="item-summary">배송기사들이 표준계약서 의무화 이후에도 단가 인하와 연속 근무 등 과로성 근무 환경을 호소하며 처우 개선을 요구하고 있다.</div>
+              <div class="item-source">한국일보 · 2026.07.12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section other">
+        <div class="section-title">🏢 유통업계 외 <span class="tag">GENERAL</span></div>
+        <div class="items">
+          <div class="item">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">공무원노조, 임금 7.1% 인상 요구 대규모 집회</div>
+              <div class="item-summary">공노총이 2027년도 임금 7.1% 인상과 연금 소득공백 해소를 요구하며 광화문에서 약 2만 명 규모의 노동자대회를 열었다.</div>
+              <div class="item-source">브릿지경제 · 2026.07.11</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">민주노총, 원청교섭 압박 총파업 선포</div>
+              <div class="item-summary">개정 노동조합법(노란봉투법) 시행 이후에도 하청노조의 원청교섭이 실질적으로 이뤄지지 않는다며 15일 총파업을 선포, 8~9월까지 투쟁을 이어가겠다고 예고했다.</div>
+              <div class="item-source">뉴스핌 · 2026.07.08</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>노사동향 위클리</span>
+      <span>발행일 2026.07.18</span>
+    </div>
+  </div>
+</body>
+</html>
