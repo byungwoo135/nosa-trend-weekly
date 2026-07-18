@@ -114,33 +114,13 @@ EOF
   - 8개: `.items`에 `tier-c` 클래스 추가하고 `item-summary`를 반드시 1문장으로 압축
 - 그래도 넘칠 것 같으면 `.item-summary` 문장을 더 줄이거나 헤더 padding을 살짝 줄여서 **`.card`(1080×1350) 안에는 다 들어가도록** 조정한다 (조건: 카드 한 장에 모든 내용이 요약돼 들어가야 함). `.card` 바깥(아래에 새로 붙는 `.opinion-section`)까지 넘치는 건 정상이며 문제가 아니다 — 카드 자체만 1350px를 넘지 않으면 된다.
 - **`html, body`에 `overflow: hidden`이나 고정 `height: 1350px`를 절대 다시 추가하지 않는다.** 이 페이지는 PNG 캡처(카드 부분만) 용도와 사람이 브라우저로 직접 열어보는 용도를 겸하는데, `overflow: hidden`을 넣으면 브라우저 창이 1350px보다 작을 때 카드 아래(타 산업군 뒷부분, 담당자 코멘트 칸)를 스크롤해서 볼 수 없게 된다. 캡처는 `.card`가 정확히 1080×1350이고 Playwright 뷰포트도 1080×1350이라 `overflow: hidden` 없이도 카드 부분만 정확히 잘려서 찍힌다.
-- PPT 링크 행을 `.card`가 끝난 `</div>` 바로 다음, 담당자 코멘트 영역보다 앞에 추가한다. **문구에 "다운로드"라는 단어를 절대 쓰지 않는다** (그 외 문구는 자유롭게 바꿔도 되지만 이 표현만은 피한다):
-  ```html
-  <div class="ppt-link-row">
-    <a class="ppt-link" href="{{REPORT_FILENAME_BASE}}.pptx">📊 PPT로 보기</a>
-  </div>
-  ```
-- 그다음 담당자 코멘트 영역을 항상 그대로 추가한다 (아바타 SVG와 문구는 고정, 매주 그대로 복사):
+- `.card`가 끝난 `</div>` 바로 다음에 담당자 코멘트 영역을 먼저 추가한다 (아바타 이미지와 문구는 고정, 매주 그대로 복사) — **`.body`의 `gap` 값과 동일하게 `.opinion-section`의 위쪽 여백을 맞춘다** (예: 그 리포트의 `.body { gap: 16px }`이면 `.opinion-section { margin: 16px auto 0; }`로, 유통업계↔타산업군 사이 간격과 카드↔코멘트 칸 간격이 시각적으로 동일해야 한다):
   ```html
   <div class="opinion-section">
     <div class="opinion-box" contenteditable="true">
       <div class="opinion-header">
         <div class="opinion-avatar">
-          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="32" fill="#EAE3F0"/>
-            <path d="M9 64c1-14 9.5-21 23-21s22 7 23 21z" fill="#1B2A4E"/>
-            <path d="M25 41 L32 50 L39 41 L34 37 L30 37 Z" fill="#FFFFFF"/>
-            <path d="M29.3 39.5 L32 44 L34.7 39.5 L33.6 58 L32 62 L30.4 58 Z" fill="#3E6EA5"/>
-            <rect x="26" y="32" width="12" height="13" rx="5" fill="#F3C9A3"/>
-            <circle cx="32" cy="25" r="15" fill="#F6D2AA"/>
-            <path d="M17 24C16 10.5 24 5.5 32 5.5C40 5.5 48 10.5 47 24C46 16.5 42 12.5 37 14.5C34 18.5 30 18.5 27 14.5C22 12.5 18 16.5 17 24Z" fill="#241E1B"/>
-            <circle cx="26" cy="26.5" r="5.6" fill="none" stroke="#2b2b2b" stroke-width="1.6"/>
-            <circle cx="38" cy="26.5" r="5.6" fill="none" stroke="#2b2b2b" stroke-width="1.6"/>
-            <line x1="31.4" y1="26.5" x2="32.6" y2="26.5" stroke="#2b2b2b" stroke-width="1.6"/>
-            <line x1="20.4" y1="25.5" x2="17" y2="24.5" stroke="#2b2b2b" stroke-width="1.6"/>
-            <line x1="43.6" y1="25.5" x2="47" y2="24.5" stroke="#2b2b2b" stroke-width="1.6"/>
-            <path d="M28 33Q32 35.5 36 33" stroke="#9c6a4e" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-          </svg>
+          <img src="assets/avatar.jpg" alt="담당자" />
         </div>
         <div class="opinion-title">📝 담당자 코멘트</div>
       </div>
@@ -148,15 +128,25 @@ EOF
     </div>
   </div>
   ```
-  `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있지만, 정적 사이트라 새로고침하면 사라진다 — 실제로 영구히 남기려면 사람이 HTML 파일을 직접 고쳐서 커밋하거나(비개발자에게는 번거로움), PPT 버전(`.pptx`)을 열어 코멘트 슬라이드에 적는 편이 훨씬 쉽다. `.card`와 `.ppt-link-row`, `.opinion-section` 모두 PNG 캡처 밖에 있다.
+  아바타는 `reports/assets/avatar.jpg`(사용자가 지정한 실제 사진, 정사각형으로 잘라둔 것)를 그대로 참조한다 — 새로 그리거나 대체하지 않는다. `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있지만, 정적 사이트라 새로고침하면 사라진다 — 실제로 영구히 남기려면 사람이 HTML 파일을 직접 고쳐서 커밋하거나(비개발자에게는 번거로움), PPT 버전(`.pptx`)을 열어 코멘트 슬라이드에 적는 편이 훨씬 쉽다.
+- 그다음(담당자 코멘트 영역 **아래**) 내보내기 링크 행을 추가한다. 배경색·필박스 없이 흐린 회색 글자로, 문구에 "다운로드"라는 단어는 절대 쓰지 않는다:
+  ```html
+  <div class="export-links-row">
+    <a class="export-link" href="{{REPORT_FILENAME_BASE}}.pptx">📊 PPT로 보기</a>
+    <a class="export-link" href="{{REPORT_FILENAME_BASE}}_full.png">🖼️ 이미지로 보기</a>
+  </div>
+  ```
+  `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
 
 완성된 HTML을 `reports/{SLUG}.html`로 저장한다.
 
-## 6. PNG 캡처
+## 6. PNG 캡처 (카드용 + 공유용 전체 페이지)
 
 ```bash
 .venv/bin/python scripts/capture.py reports/{SLUG}.html reports/{SLUG}.png
+.venv/bin/python scripts/capture.py reports/{SLUG}.html reports/{SLUG}_full.png full
 ```
+첫 번째는 index.html 썸네일/카드뉴스 공유용 1080×1350 카드만, 두 번째는 `full` 인자로 카드+내보내기 링크+담당자 코멘트 칸까지 스크롤 없이 전체 페이지를 한 장으로 캡처한다 (`export-links-row`의 "이미지로 보기" 링크가 가리키는 파일).
 
 ## 7. PPTX 생성 (편집 가능한 PPT 버전)
 
@@ -164,7 +154,9 @@ EOF
 .venv/bin/python scripts/make_pptx.py reports/{SLUG}.json reports/{SLUG}.pptx {오늘 날짜 YYYY.MM.DD}
 ```
 
-`scripts/make_pptx.py`는 STEP 4에서 저장한 JSON을 그대로 읽어 같은 색상·구조(헤더, 3줄 요약, 유통업계/타산업군 두 섹션, CHECK 배지, 담당자 코멘트 슬라이드)를 실제 편집 가능한 텍스트박스/도형으로 재현한다. 이 저장소에는 이 pptx를 시각적으로 렌더링해서 검수할 도구(LibreOffice 등)가 없으므로, 생성 후 아래로 텍스트 내용과 좌표 범위만 검증한다 (내용 누락, 잘못된 순서, 슬라이드 밖으로 벗어난 도형이 없는지):
+`scripts/make_pptx.py`는 STEP 4에서 저장한 JSON을 그대로 읽어 같은 색상·구조(헤더, 3줄 요약, 유통업계/타산업군 두 섹션, CHECK 배지, 담당자 코멘트 슬라이드)를 실제 편집 가능한 텍스트박스/도형으로 재현한다. 담당자 코멘트 슬라이드의 아바타도 `reports/assets/avatar.jpg`를 원형으로 잘라 그대로 삽입한다(파일이 없으면 이모지로 자동 대체). 각 기사 헤드라인에는 `source_url`로 하이퍼링크가 걸려 PowerPoint에서도 클릭하면 원문으로 이동한다. 모든 텍스트는 `set_font()` 헬퍼로 라틴/한글(East Asian)/특수문자(cs) 서체를 전부 "Malgun Gothic"으로 명시해서 저장하므로, PowerPoint가 한글 부분만 테마 기본 서체로 바꿔치기하며 자간이 벌어지는 문제가 생기지 않는다 — **이 스크립트를 고칠 때 텍스트를 추가하는 곳이 있다면 반드시 `set_font()`(또는 이를 사용하는 `add_text`/`add_pill`)를 거치게 하고, `run.font.name`을 직접 쓰지 않는다.**
+
+이 저장소에는 이 pptx를 시각적으로 렌더링해서 검수할 도구(LibreOffice 등)가 없으므로, 생성 후 아래로 텍스트 내용·좌표 범위·하이퍼링크만 검증한다 (내용 누락, 잘못된 순서, 슬라이드 밖으로 벗어난 도형, 하이퍼링크 누락이 없는지):
 
 ```bash
 .venv/bin/python -c "
@@ -180,11 +172,11 @@ for si, slide in enumerate(prs.slides):
             print(shape.text_frame.text.strip())
 "
 ```
-텍스트가 JSON 내용과 일치하고 OUT OF BOUNDS가 없으면 통과. 문제가 있으면 `scripts/make_pptx.py`의 레이아웃 상수를 조정한다 (스크립트 상단 주석 참고).
+텍스트가 JSON 내용과 일치하고 OUT OF BOUNDS가 없으면 통과. 헤드라인 개수만큼 하이퍼링크가 걸려 있어야 한다(기사 수와 동일). 문제가 있으면 `scripts/make_pptx.py`의 레이아웃 상수를 조정한다 (스크립트 상단 주석 참고).
 
 ## 8. 결과 확인
 
-Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지, PPT 링크와 담당자 코멘트 칸이 순서대로 존재하는지 육안 확인한다. `.card`가 넘치면 STEP 5로 돌아가 내용을 줄인다.
+Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지 확인한다. 그다음 `reports/{SLUG}_full.png`를 열어 담당자 코멘트 칸과 내보내기 링크 두 개(PPT로 보기 / 이미지로 보기)가 순서대로 있는지, 카드↔코멘트 칸 간격이 유통업계↔타산업군 간격과 비슷한지 육안 확인한다. `.card`가 넘치면 STEP 5로 돌아가 내용을 줄인다.
 
 ## 9. index.html 갱신
 
@@ -205,7 +197,7 @@ Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스
 ## 10. 배포
 
 ```bash
-git add index.html reports/{SLUG}.html reports/{SLUG}.png reports/{SLUG}.pptx reports/{SLUG}.json
+git add index.html reports/{SLUG}.html reports/{SLUG}.png reports/{SLUG}_full.png reports/{SLUG}.pptx reports/{SLUG}.json
 git commit -m "Add weekly report {SLUG}"
 git push origin main
 ```

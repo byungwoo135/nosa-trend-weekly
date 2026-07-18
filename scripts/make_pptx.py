@@ -5,6 +5,7 @@ Usage: .venv/bin/python scripts/make_pptx.py reports/{SLUG}.json reports/{SLUG}.
 """
 import json
 import sys
+from pathlib import Path
 
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
@@ -70,11 +71,34 @@ def add_gradient_rect(slide, x, y, w, h, c1, c2, angle=135):
     return shp
 
 
+def set_font(run, size, color, bold=False, italic=False, font=FONT):
+    """python-pptx's run.font.name only sets the *Latin* typeface (<a:latin>).
+    Korean text is rendered via the East Asian typeface (<a:ea>), which falls
+    back to the theme default if not set explicitly -- that mismatch is what
+    causes PowerPoint to substitute a different font (and different glyph
+    spacing/kerning) for the Korean text even though run.font.name looks
+    right. Set latin/ea/cs to the same face so PowerPoint doesn't substitute
+    anything, on any machine that has this font."""
+    run.font.size = Pt(size)
+    run.font.bold = bold
+    run.font.italic = italic
+    run.font.color.rgb = color
+    run.font.name = font  # sets <a:latin>
+    rPr = run._r.get_or_add_rPr()
+    for tag in ("a:ea", "a:cs"):
+        el = rPr.find(qn(tag))
+        if el is None:
+            el = rPr.makeelement(qn(tag), {})
+            rPr.append(el)
+        el.set("typeface", font)
+
+
 def add_text(slide, x, y, w, h, text, size, color, bold=False, align=PP_ALIGN.LEFT,
-             anchor=MSO_ANCHOR.TOP, italic=False, font=FONT):
+             anchor=MSO_ANCHOR.TOP, italic=False, font=FONT, hyperlink=None):
     tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
     tf = tb.text_frame
     tf.word_wrap = True
+    tf.auto_size = None
     tf.vertical_anchor = anchor
     tf.margin_left = 0
     tf.margin_right = 0
@@ -84,12 +108,28 @@ def add_text(slide, x, y, w, h, text, size, color, bold=False, align=PP_ALIGN.LE
     p.alignment = align
     run = p.add_run()
     run.text = text
-    run.font.size = Pt(size)
-    run.font.bold = bold
-    run.font.italic = italic
-    run.font.color.rgb = color
-    run.font.name = font
+    set_font(run, size, color, bold=bold, italic=italic, font=font)
+    if hyperlink:
+        run.hyperlink.address = hyperlink
     return tb
+
+
+def add_circular_picture(slide, image_path, x, y, d):
+    """Insert a picture cropped to a circle. Falls back to a plain square
+    picture if the OOXML geometry swap fails for any reason."""
+    pic = slide.shapes.add_picture(str(image_path), Inches(x), Inches(y), Inches(d), Inches(d))
+    try:
+        spPr = pic._element.spPr
+        old_geom = spPr.find(qn('a:prstGeom'))
+        if old_geom is not None:
+            spPr.remove(old_geom)
+        geom = spPr.makeelement(qn('a:prstGeom'), {'prst': 'ellipse'})
+        av_lst = geom.makeelement(qn('a:avLst'), {})
+        geom.append(av_lst)
+        spPr.append(geom)
+    except Exception:
+        pass
+    return pic
 
 
 def add_pill(slide, x, y, w, h, text, fill, text_color, size=10):
@@ -104,10 +144,7 @@ def add_pill(slide, x, y, w, h, text, fill, text_color, size=10):
     p.alignment = PP_ALIGN.CENTER
     run = p.add_run()
     run.text = text
-    run.font.size = Pt(size)
-    run.font.bold = True
-    run.font.color.rgb = text_color
-    run.font.name = FONT
+    set_font(run, size, text_color, bold=True)
     tf.vertical_anchor = MSO_ANCHOR.MIDDLE
     return shp
 
@@ -163,7 +200,8 @@ def build_section(slide, x, y, w, title, tag_text, items, accent, accent_bg, dot
         headline_h = HEADLINE_LINE_H * headline_lines
         if has_badge:
             add_pill(slide, text_x + text_w - BADGE_W, cursor, BADGE_W, 0.22, "CHECK", PURPLE, WHITE, size=8.5)
-        add_text(slide, text_x, cursor, headline_w, headline_h, item["headline"], HEADLINE_SIZE, INK, bold=True)
+        add_text(slide, text_x, cursor, headline_w, headline_h, item["headline"], HEADLINE_SIZE, INK, bold=True,
+                  hyperlink=item.get("source_url"))
         cursor += headline_h + 0.05
 
         summary_lines = lines_needed(item["summary"], text_w, SUMMARY_SIZE)
@@ -276,19 +314,23 @@ def main():
     add_rect(slide2, box_margin, box_margin, box_w, box_h, WHITE, line=DASH_BORDER, rounded=True, radius=0.04)
 
     avatar_d = 0.55
-    av = slide2.shapes.add_shape(MSO_SHAPE.OVAL, Inches(box_margin + 0.35), Inches(box_margin + 0.35), Inches(avatar_d), Inches(avatar_d))
-    av.fill.solid()
-    av.fill.fore_color.rgb = AVATAR_BG
-    av.line.fill.background()
-    no_shadow(av)
-    av_tf = av.text_frame
-    av_tf.margin_left = 0; av_tf.margin_right = 0; av_tf.margin_top = 0; av_tf.margin_bottom = 0
-    av_tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    av_p = av_tf.paragraphs[0]
-    av_p.alignment = PP_ALIGN.CENTER
-    av_run = av_p.add_run()
-    av_run.text = "🧑‍💼"
-    av_run.font.size = Pt(22)
+    avatar_path = Path(out_path).resolve().parent / "assets" / "avatar.jpg"
+    if avatar_path.exists():
+        add_circular_picture(slide2, avatar_path, box_margin + 0.35, box_margin + 0.35, avatar_d)
+    else:
+        av = slide2.shapes.add_shape(MSO_SHAPE.OVAL, Inches(box_margin + 0.35), Inches(box_margin + 0.35), Inches(avatar_d), Inches(avatar_d))
+        av.fill.solid()
+        av.fill.fore_color.rgb = AVATAR_BG
+        av.line.fill.background()
+        no_shadow(av)
+        av_tf = av.text_frame
+        av_tf.margin_left = 0; av_tf.margin_right = 0; av_tf.margin_top = 0; av_tf.margin_bottom = 0
+        av_tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        av_p = av_tf.paragraphs[0]
+        av_p.alignment = PP_ALIGN.CENTER
+        av_run = av_p.add_run()
+        av_run.text = "🧑‍💼"
+        av_run.font.size = Pt(22)
 
     add_text(slide2, box_margin + 0.35 + avatar_d + 0.18, box_margin + 0.35, 4.5, 0.4,
               "📝 담당자 코멘트", 18, INK, bold=True, anchor=MSO_ANCHOR.MIDDLE)
@@ -302,10 +344,7 @@ def main():
     p = ctf.paragraphs[0]
     run = p.add_run()
     run.text = "여기에 의견을 작성하세요."
-    run.font.size = Pt(14)
-    run.font.italic = True
-    run.font.color.rgb = RGBColor(0xA7, 0xAE, 0xB8)
-    run.font.name = FONT
+    set_font(run, 14, RGBColor(0xA7, 0xAE, 0xB8), italic=True)
 
     prs.save(out_path)
     print("Saved", out_path)
