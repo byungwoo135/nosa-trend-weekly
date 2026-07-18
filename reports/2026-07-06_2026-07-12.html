@@ -74,7 +74,7 @@
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 20px;
-    padding: 28px 32px 30px;
+    padding: 22px 30px 24px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -83,9 +83,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
   .tag {
     font-family: 'GT America', 'Pretendard', sans-serif;
@@ -99,36 +99,39 @@
   .items {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 13px;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .item {
     display: flex;
     gap: 14px;
+    color: inherit;
+    text-decoration: none;
   }
+  .item:hover .item-headline { text-decoration: underline; }
   .item .dot {
     width: 8px; height: 8px; border-radius: 50%;
-    margin-top: 10px; flex-shrink: 0;
+    margin-top: 9px; flex-shrink: 0;
   }
   .section.retail .item .dot { background: var(--purple); }
   .section.other .item .dot { background: var(--orange); }
   .item-body { flex: 1; }
   .item-headline {
-    font-size: 21px;
+    font-size: 19px;
     font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 6px;
+    line-height: 1.35;
+    margin-bottom: 3px;
   }
   .item-summary {
-    font-size: 16px;
+    font-size: 14.5px;
     color: var(--sub);
-    line-height: 1.55;
+    line-height: 1.42;
   }
   .item-source {
-    font-size: 13px;
+    font-size: 12px;
     color: #97a0b3;
-    margin-top: 6px;
+    margin-top: 3px;
   }
   .footer {
     padding: 24px 64px 40px;
@@ -151,43 +154,75 @@
       <div class="section retail">
         <div class="section-title">🏬 유통업계 <span class="tag">RETAIL</span></div>
         <div class="items">
-          <div class="item">
+          <a class="item" href="https://www.fnnews.com/news/202607041301289958" target="_blank" rel="noopener">
             <div class="dot"></div>
             <div class="item-body">
               <div class="item-headline">홈플러스 회생절차 폐지…마트노조 비상투쟁</div>
-              <div class="item-summary">서울회생법원이 회생계획의 실행가능성 부족을 이유로 회생절차 폐지를 결정했다. 마트산업노조는 DIP 자금 확보 실패 시 청산이 불가피하다며 정부에 긴급조치를 요구했다.</div>
+              <div class="item-summary">서울회생법원이 회생계획 실행가능성 부족을 이유로 회생절차 폐지를 결정, 마트산업노조는 DIP 자금 확보 실패 시 청산 우려로 정부에 긴급조치를 요구했다.</div>
               <div class="item-source">파이낸셜뉴스 · 2026.07.04</div>
             </div>
-          </div>
-          <div class="item">
+          </a>
+          <a class="item" href="https://www.khan.co.kr/article/202607071745001" target="_blank" rel="noopener">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">배달 라이더 근로자성, 법원 첫 인정</div>
+              <div class="item-summary">서울고법이 배달대행 플랫폼 라이더에 근로기준법상 근로자 지위를 처음 인정, 최저임금·퇴직금 요구 확산이 예상된다.</div>
+              <div class="item-source">경향신문 · 2026.07.07</div>
+            </div>
+          </a>
+          <a class="item" href="https://www.newspim.com/news/view/20260709000715" target="_blank" rel="noopener">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">대법원 "CJ대한통운, 택배기사 교섭의무 없다"</div>
+              <div class="item-summary">대법원이 원청과 택배기사 간 명시적 근로계약이 없다며 단체교섭 의무를 부정, 원심을 파기환송했다. 택배노조는 강하게 반발했다.</div>
+              <div class="item-source">뉴스핌 · 2026.07.09</div>
+            </div>
+          </a>
+          <a class="item" href="https://www.hankookilbo.com/news/article/A2026071200010001679" target="_blank" rel="noopener">
             <div class="dot"></div>
             <div class="item-body">
               <div class="item-headline">쿠팡 퀵플렉스, 표준계약서 이후도 장시간 근무 논란</div>
-              <div class="item-summary">배송기사들이 표준계약서 의무화 이후에도 단가 인하와 연속 근무 등 과로성 근무 환경을 호소하며 처우 개선을 요구하고 있다.</div>
+              <div class="item-summary">배송기사들이 표준계약서 의무화 이후에도 단가 인하와 연속 근무 등 과로성 근무를 호소하며 처우 개선을 요구하고 있다.</div>
               <div class="item-source">한국일보 · 2026.07.12</div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
       <div class="section other">
         <div class="section-title">🏢 타 산업군 <span class="tag">OTHER</span></div>
         <div class="items">
-          <div class="item">
+          <a class="item" href="https://www.mt.co.kr/industry/2026/07/07/2026070717523796701" target="_blank" rel="noopener">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">현대차 노사협상 결렬 위기…노조 "납득 못해"</div>
+              <div class="item-summary">사측이 기본급 8만4000원 인상과 성과금 350%+950만원 등 추가안을 냈지만 노조는 수용 불가 입장으로 쟁의대책위 논의에 들어갔다.</div>
+              <div class="item-source">머니투데이 · 2026.07.07</div>
+            </div>
+          </a>
+          <a class="item" href="https://www.dt.co.kr/article/12072847" target="_blank" rel="noopener">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">금융노조, 임금·주4.5일제 두고 중노위 조정 돌입</div>
+              <div class="item-summary">은행권 임단협이 결렬되며 금융노조가 중앙노동위원회에 조정을 신청, 임금 인상률과 주4.5일제 도입이 핵심 쟁점이다.</div>
+              <div class="item-source">디지털타임스 · 2026.07.07</div>
+            </div>
+          </a>
+          <a class="item" href="https://www.newspim.com/news/view/20260708000676" target="_blank" rel="noopener">
+            <div class="dot"></div>
+            <div class="item-body">
+              <div class="item-headline">민주노총, 원청교섭 압박 총파업 선포</div>
+              <div class="item-summary">노란봉투법 시행 이후에도 하청노조의 원청교섭이 실질적으로 이뤄지지 않는다며 15일 총파업을 선포, 8~9월까지 투쟁을 예고했다.</div>
+              <div class="item-source">뉴스핌 · 2026.07.08</div>
+            </div>
+          </a>
+          <a class="item" href="https://www.viva100.com/article/20260630501247" target="_blank" rel="noopener">
             <div class="dot"></div>
             <div class="item-body">
               <div class="item-headline">공무원노조, 임금 7.1% 인상 요구 대규모 집회</div>
               <div class="item-summary">공노총이 2027년도 임금 7.1% 인상과 연금 소득공백 해소를 요구하며 광화문에서 약 2만 명 규모의 노동자대회를 열었다.</div>
               <div class="item-source">브릿지경제 · 2026.07.11</div>
             </div>
-          </div>
-          <div class="item">
-            <div class="dot"></div>
-            <div class="item-body">
-              <div class="item-headline">민주노총, 원청교섭 압박 총파업 선포</div>
-              <div class="item-summary">개정 노동조합법(노란봉투법) 시행 이후에도 하청노조의 원청교섭이 실질적으로 이뤄지지 않는다며 15일 총파업을 선포, 8~9월까지 투쟁을 이어가겠다고 예고했다.</div>
-              <div class="item-source">뉴스핌 · 2026.07.08</div>
-            </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
