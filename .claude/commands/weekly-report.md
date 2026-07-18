@@ -88,21 +88,25 @@ EOF
 {
   "week_start": "START",
   "week_end": "END",
+  "summary": [ "이번 주 핵심 요약 1문장", "핵심 요약 2문장", "핵심 요약 3문장" ],
   "retail": [ { "headline": "...", "summary": "...", "source_name": "...", "source_url": "...", "published": "...", "policy": false, "kurly_related": false, "kurly_reason": "" } ],
   "other": [ { "headline": "...", "summary": "...", "source_name": "...", "source_url": "...", "published": "...", "policy": false, "kurly_related": false, "kurly_reason": "" } ]
 }
 ```
 정책 우선 정렬을 반영해 배열 순서 자체를 이미 정책 항목이 앞에 오도록 저장한다.
 
+`summary`는 이번 주 전체(유통업계+타 산업군을 아울러)에서 HR 담당자가 반드시 알아야 할 핵심을 **정확히 3줄**로 압축한 것이다. 가장 중요한 정책 변화를 1번째 줄에, 그다음 중요한 흐름을 2·3번째 줄에 담는다. 각 줄은 카드에서 한 줄로 표시되므로 간결하게(60자 내외) 작성한다.
+
 ## 5. 카드뉴스 HTML 생성
 
 `reports/_template.html`을 열어 구조/CSS를 그대로 유지한 채, 다음만 교체한다 (색상·서체는 Kurly Nextmile BI 가이드라인 고정값이므로 임의 변경 금지 — Main Color: Kurly Purple `#5f0080`, Sub Color: Nextmile Orange `#ff7b3c`, 국문서체 SD산돌고딕Neo1 / 영문서체 GT America):
 - `{{DATE_RANGE}}` → DATE_RANGE_LABEL
 - `{{PUBLISH_DATE}}` → 오늘 날짜 (YYYY.MM.DD)
+- `{{SUMMARY_LINE_1}}` / `{{SUMMARY_LINE_2}}` / `{{SUMMARY_LINE_3}}` → JSON의 `summary` 배열 3줄 (헤더 바로 아래 "📌 이번 주 한눈에 보기" 박스에 표시됨 — 두 섹션보다 위에 위치)
 - `유통업계` 섹션의 `.items` 안에 그룹 A 항목들을(JSON에 저장한 순서 그대로, 정책 항목 먼저) `.item` 블록으로 반복 생성 (템플릿의 예시 `.item` 블록을 패턴으로 복제)
 - `타 산업군` 섹션의 `.items` 안에 그룹 B 항목들을 동일하게 반복 생성
 - **각 `.item`은 `<div>`가 아니라 `<a class="item" href="{source_url}" target="_blank" rel="noopener">`로 작성한다** — 카드에서 헤드라인/요약을 클릭하면 원문 기사로 바로 이동해야 한다
-- `kurly_related`가 true인 항목만 `item-headline`을 `item-headline-row`로 감싸고 그 안에 `<span class="kn-badge">컬리넥스트마일 관련</span>`을 헤드라인 옆에 추가한다 (템플릿에 두 패턴 모두 예시로 들어있음 — 배지 있는 것/없는 것). false인 항목은 배지 없이 기존 `item-headline` 구조 그대로 둔다.
+- `kurly_related`가 true인 항목만 `item-headline`을 `item-headline-row`로 감싸고 그 안에 `<span class="kn-badge">CHECK</span>`을 헤드라인 옆에 추가한다 (템플릿에 두 패턴 모두 예시로 들어있음 — 배지 있는 것/없는 것). false인 항목은 배지 없이 기존 `item-headline` 구조 그대로 둔다. 배지 문구는 항상 정확히 "CHECK"로 쓴다 (다른 문구로 바꾸지 않는다).
 - **항목 수에 따라 밀도를 조정한다** (한 섹션에 담기는 개수 기준):
   - 4~5개: 기본 스타일 그대로 사용
   - 6~7개: 그 섹션의 `.items`에 `tier-b` 클래스 추가 (`<div class="items tier-b">`)
@@ -119,7 +123,7 @@ EOF
 
 ## 7. 결과 확인
 
-Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 스크롤 없이 한 화면에 다 들어가는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, 컬리넥스트마일 관련 배지가 실질적 연관이 있는 항목에만 붙어있는지 육안 확인한다. 넘치면 STEP 5로 돌아가 내용을 줄인다.
+Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지 육안 확인한다. 넘치면 STEP 5로 돌아가 내용을 줄인다.
 
 ## 8. index.html 갱신
 
