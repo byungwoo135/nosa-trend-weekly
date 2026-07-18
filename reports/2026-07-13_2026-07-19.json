@@ -1,0 +1,92 @@
+{
+  "week_start": "2026-07-13",
+  "week_end": "2026-07-19",
+  "retail": [
+    {
+      "headline": "2027년 최저임금 시간급 10,700원 확정",
+      "summary": "최저임금위원회가 제14차 전원회의에서 2027년 적용 최저임금을 10,700원(3.7% 인상)으로 의결했다. 시급제 인력 비중이 큰 물류·배송 현장의 인건비 부담이 커질 전망이다.",
+      "source_name": "최저임금위원회",
+      "source_url": "https://www.laborseoul.com/post/2027%EB%85%84-%EC%A0%81%EC%9A%A9-%EC%B5%9C%EC%A0%80%EC%9E%84%EA%B8%88-%EA%B2%B0%EC%A0%95-%EC%95%88%EB%82%B4-%EC%8B%9C%EA%B8%89-10-700%EC%9B%90-%EC%9B%94-%ED%99%98%EC%82%B0%EC%95%A1-2-236-300%EC%9B%90",
+      "published": "2026.07.14",
+      "policy": true,
+      "kurly_related": true,
+      "kurly_reason": "물류센터·배송 인력 다수가 시급제로, 최저임금 인상이 인건비 구조에 직접 영향"
+    },
+    {
+      "headline": "홈플러스, 기습 휴업 통보에 노조 반발",
+      "summary": "전 점포에 '출근 후 즉시 퇴근' 지시가 내려가자 마트노조가 사전 협의 없는 일방적 조치라며 강력 반발했다.",
+      "source_name": "뉴스핌",
+      "source_url": "https://www.newspim.com/news/view/20260713000801",
+      "published": "2026.07.13",
+      "policy": false,
+      "kurly_related": false
+    },
+    {
+      "headline": "마트노조, MBK 규탄 집회…촛불집회 돌입",
+      "summary": "마트산업노조가 홈플러스 대주주 MBK파트너스를 규탄하는 집회를 열고, 이후 매일 저녁 촛불집회를 이어가기로 했다.",
+      "source_name": "이투데이",
+      "source_url": "https://www.etoday.co.kr/news/view/2603240",
+      "published": "2026.07.15",
+      "policy": false,
+      "kurly_related": false
+    },
+    {
+      "headline": "홈플러스, 메리츠 이사회 극적 의결로 2000억 확보",
+      "summary": "메리츠금융지주 이사회가 진통 끝에 2000억원 DIP 자금 지원을 의결하며 홈플러스가 당장의 파산 위기를 넘겼다.",
+      "source_name": "종합보도",
+      "source_url": "https://www.etoday.co.kr/news/view/2603240",
+      "published": "2026.07.16",
+      "policy": false,
+      "kurly_related": false
+    }
+  ],
+  "other": [
+    {
+      "headline": "울산지노위, 현대차 사내하청 '사용자성' 첫 인정",
+      "summary": "노란봉투법 시행 후 완성차 업계 첫 사례로, 원청이 사내하청 생산직·구내식당·보안인력에 대해 사용자성이 있다고 판단했다. 원청-위탁 구조 전반에 파급력이 예상된다.",
+      "source_name": "아주경제",
+      "source_url": "https://www.ajunews.com/view/20260715143637317",
+      "published": "2026.07.15",
+      "policy": true,
+      "kurly_related": true,
+      "kurly_reason": "원청의 '실질적 지배력' 판단 기준이 확장되는 흐름으로, 3PL·위탁 배송기사 구조를 가진 컬리넥스트마일의 원청 사용자성 노출과 직결"
+    },
+    {
+      "headline": "민주노총, 노란봉투법 시행 후 첫 총파업 돌입",
+      "summary": "서울 1만명·전국 10만명 규모로 총파업대회를 열고 원청의 사용자 책임 인정을 요구했다. 8~9월 추가 투쟁도 예고했다.",
+      "source_name": "뉴스핌",
+      "source_url": "https://www.newspim.com/news/view/20260715001200",
+      "published": "2026.07.15",
+      "policy": true,
+      "kurly_related": true,
+      "kurly_reason": "원청교섭 압박 확산이 택배·배송 등 위탁계약 기반 물류업계 전반으로 번질 가능성"
+    },
+    {
+      "headline": "현대차 노조, 부분파업 지속…임단협 장기전",
+      "summary": "15차 교섭 결렬 후 사흘간 부분파업에 이어 20~22일 추가 부분파업을 의결했다. 기본급 인상폭을 둘러싼 이견이 좁혀지지 않고 있다.",
+      "source_name": "파이낸셜뉴스",
+      "source_url": "https://www.fnnews.com/news/202607081742091849",
+      "published": "2026.07.13",
+      "policy": false,
+      "kurly_related": false
+    },
+    {
+      "headline": "포스코, 58년 무분규 기록 깨지나…쟁의행위 가결",
+      "summary": "임금·복지와 협력사 직고용 문제를 두고 노사가 충돌, 쟁의행위 찬반투표가 가결되며 창사 이래 첫 파업 가능성이 커졌다.",
+      "source_name": "아시아투데이",
+      "source_url": "https://www.asiatoday.co.kr/kn/view.php?key=20260713010004353",
+      "published": "2026.07.13",
+      "policy": false,
+      "kurly_related": false
+    },
+    {
+      "headline": "금융노조, 주4.5일제 두고 하투 격화",
+      "summary": "임단협 결렬에 이어 중노위 조정도 난항을 겪으며 금융노조의 하계 투쟁 수위가 높아지고 있다.",
+      "source_name": "아주경제",
+      "source_url": "https://www.ajunews.com/view/20260716143356908",
+      "published": "2026.07.16",
+      "policy": false,
+      "kurly_related": false
+    }
+  ]
+}
