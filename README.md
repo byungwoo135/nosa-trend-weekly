@@ -4,15 +4,16 @@
 
 ## 구조
 - `index.html` — 발행된 리포트 아카이브 갤러리
-- `reports/` — 주차별 `{start}_{end}.html` / `.png` / `.json`
+- `reports/` — 주차별 `{start}_{end}.html` / `.png` / `.pptx` / `.json`
 - `reports/_template.html` — 카드뉴스 디자인 템플릿 (1080×1350 고정)
 - `scripts/capture.py` — HTML → PNG 캡처 스크립트 (Playwright)
+- `scripts/make_pptx.py` — JSON → 편집 가능한 PPT(.pptx) 생성 스크립트 (python-pptx)
 - `.claude/commands/weekly-report.md` — 검색부터 발행까지 전체 절차를 담은 슬래시 커맨드
 
 ## 로컬 환경
 ```bash
 python3 -m venv .venv
-./.venv/bin/pip install playwright
+./.venv/bin/pip install playwright python-pptx
 ./.venv/bin/playwright install chromium
 ```
 

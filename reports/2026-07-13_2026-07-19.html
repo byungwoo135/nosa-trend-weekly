@@ -195,6 +195,25 @@
     font-size: 13px;
     color: #9aa3b5;
   }
+  .ppt-link-row {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 18px 64px 0;
+    text-align: center;
+    background: var(--paper);
+  }
+  .ppt-link {
+    display: inline-block;
+    font-family: 'GT America', 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--purple);
+    text-decoration: none;
+    background: var(--retail-bg);
+    padding: 8px 18px;
+    border-radius: 999px;
+  }
+  .ppt-link:hover { text-decoration: underline; }
   .opinion-section {
     width: 1080px;
     margin: 0 auto;
@@ -206,6 +225,7 @@
     border: 2px dashed #c9b3d8;
     border-radius: 16px;
     padding: 20px 28px 26px;
+    outline: none;
   }
   .opinion-header {
     display: flex;
@@ -226,19 +246,6 @@
     color: var(--ink);
     flex: 1;
   }
-  .opinion-edit-link {
-    font-family: 'GT America', 'Pretendard', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--purple);
-    text-decoration: none;
-    border: 1px solid var(--retail-bg);
-    background: var(--retail-bg);
-    padding: 6px 12px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .opinion-edit-link:hover { text-decoration: underline; }
   .opinion-content {
     min-height: 120px;
     font-size: 15.5px;
@@ -369,8 +376,11 @@
       <span>발행일 2026.07.18</span>
     </div>
   </div>
+  <div class="ppt-link-row">
+    <a class="ppt-link" href="2026-07-13_2026-07-19.pptx">📊 PPT로 보기</a>
+  </div>
   <div class="opinion-section">
-    <div class="opinion-box">
+    <div class="opinion-box" contenteditable="true">
       <div class="opinion-header">
         <div class="opinion-avatar">
           <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -390,7 +400,6 @@
           </svg>
         </div>
         <div class="opinion-title">📝 담당자 코멘트</div>
-        <a class="opinion-edit-link" href="https://github.com/byungwoo135/nosa-trend-weekly/edit/main/reports/2026-07-13_2026-07-19.html" target="_blank" rel="noopener">✏️ GitHub에서 편집</a>
       </div>
       <div class="opinion-content" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
     </div>

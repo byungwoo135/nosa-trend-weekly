@@ -103,7 +103,7 @@ EOF
 - `{{DATE_RANGE}}` → DATE_RANGE_LABEL
 - `{{PUBLISH_DATE}}` → 오늘 날짜 (YYYY.MM.DD)
 - `{{SUMMARY_LINE_1}}` / `{{SUMMARY_LINE_2}}` / `{{SUMMARY_LINE_3}}` → JSON의 `summary` 배열 3줄 (헤더 바로 아래 "📌 이번 주 한눈에 보기" 박스에 표시됨 — 두 섹션보다 위에 위치)
-- `{{REPORT_FILENAME}}` → `{SLUG}.html` (맨 아래 담당자 코멘트 박스의 "GitHub에서 편집" 링크가 이번 주 파일을 정확히 가리키도록)
+- `{{REPORT_FILENAME_BASE}}` → `{SLUG}` (PPT 링크가 이번 주 `.pptx` 파일을 정확히 가리키도록)
 - `유통업계` 섹션의 `.items` 안에 그룹 A 항목들을(JSON에 저장한 순서 그대로, 정책 항목 먼저) `.item` 블록으로 반복 생성 (템플릿의 예시 `.item` 블록을 패턴으로 복제)
 - `타 산업군` 섹션의 `.items` 안에 그룹 B 항목들을 동일하게 반복 생성
 - **각 `.item`은 `<div>`가 아니라 `<a class="item" href="{source_url}" target="_blank" rel="noopener">`로 작성한다** — 카드에서 헤드라인/요약을 클릭하면 원문 기사로 바로 이동해야 한다
@@ -114,10 +114,16 @@ EOF
   - 8개: `.items`에 `tier-c` 클래스 추가하고 `item-summary`를 반드시 1문장으로 압축
 - 그래도 넘칠 것 같으면 `.item-summary` 문장을 더 줄이거나 헤더 padding을 살짝 줄여서 **`.card`(1080×1350) 안에는 다 들어가도록** 조정한다 (조건: 카드 한 장에 모든 내용이 요약돼 들어가야 함). `.card` 바깥(아래에 새로 붙는 `.opinion-section`)까지 넘치는 건 정상이며 문제가 아니다 — 카드 자체만 1350px를 넘지 않으면 된다.
 - **`html, body`에 `overflow: hidden`이나 고정 `height: 1350px`를 절대 다시 추가하지 않는다.** 이 페이지는 PNG 캡처(카드 부분만) 용도와 사람이 브라우저로 직접 열어보는 용도를 겸하는데, `overflow: hidden`을 넣으면 브라우저 창이 1350px보다 작을 때 카드 아래(타 산업군 뒷부분, 담당자 코멘트 칸)를 스크롤해서 볼 수 없게 된다. 캡처는 `.card`가 정확히 1080×1350이고 Playwright 뷰포트도 1080×1350이라 `overflow: hidden` 없이도 카드 부분만 정확히 잘려서 찍힌다.
-- `</div>`로 `.card`가 끝난 바로 다음, `</body>` 앞에 담당자 코멘트 영역을 항상 그대로 추가한다. 아바타 SVG와 문구는 고정이며, **`{{REPORT_FILENAME}}`만 이번 주 파일명(`{SLUG}.html`)으로 바꾼다** (그 외 내용은 절대 임의로 바꾸지 않는다):
+- PPT 링크 행을 `.card`가 끝난 `</div>` 바로 다음, 담당자 코멘트 영역보다 앞에 추가한다. **문구에 "다운로드"라는 단어를 절대 쓰지 않는다** (그 외 문구는 자유롭게 바꿔도 되지만 이 표현만은 피한다):
+  ```html
+  <div class="ppt-link-row">
+    <a class="ppt-link" href="{{REPORT_FILENAME_BASE}}.pptx">📊 PPT로 보기</a>
+  </div>
+  ```
+- 그다음 담당자 코멘트 영역을 항상 그대로 추가한다 (아바타 SVG와 문구는 고정, 매주 그대로 복사):
   ```html
   <div class="opinion-section">
-    <div class="opinion-box">
+    <div class="opinion-box" contenteditable="true">
       <div class="opinion-header">
         <div class="opinion-avatar">
           <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -137,13 +143,12 @@ EOF
           </svg>
         </div>
         <div class="opinion-title">📝 담당자 코멘트</div>
-        <a class="opinion-edit-link" href="https://github.com/byungwoo135/nosa-trend-weekly/edit/main/reports/{SLUG}.html" target="_blank" rel="noopener">✏️ GitHub에서 편집</a>
       </div>
       <div class="opinion-content" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
     </div>
   </div>
   ```
-  `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). 이 칸은 페이지 자체에서 직접 타이핑해도 저장되지 않는다 — 실제로 의견을 영구히 남기려면 "✏️ GitHub에서 편집" 링크로 들어가 GitHub에 로그인한 뒤 파일을 직접 고쳐 커밋해야 하며, 이 저장소에 쓰기 권한이 있는 사람만 커밋할 수 있다. 이게 접근 권한을 실질적으로 제한하는 유일한 방법이므로, `contenteditable`이나 클라이언트 측 로그인 검사 같은 가짜 보호장치를 추가하지 않는다. `.card` 밖에 있으므로 PNG 캡처에는 포함되지 않는다.
+  `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있지만, 정적 사이트라 새로고침하면 사라진다 — 실제로 영구히 남기려면 사람이 HTML 파일을 직접 고쳐서 커밋하거나(비개발자에게는 번거로움), PPT 버전(`.pptx`)을 열어 코멘트 슬라이드에 적는 편이 훨씬 쉽다. `.card`와 `.ppt-link-row`, `.opinion-section` 모두 PNG 캡처 밖에 있다.
 
 완성된 HTML을 `reports/{SLUG}.html`로 저장한다.
 
@@ -153,11 +158,35 @@ EOF
 .venv/bin/python scripts/capture.py reports/{SLUG}.html reports/{SLUG}.png
 ```
 
-## 7. 결과 확인
+## 7. PPTX 생성 (편집 가능한 PPT 버전)
 
-Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지, 맨 아래 담당자 코멘트 칸이 비어 있는 채로 존재하는지 육안 확인한다. `.card`가 넘치면 STEP 5로 돌아가 내용을 줄인다.
+```bash
+.venv/bin/python scripts/make_pptx.py reports/{SLUG}.json reports/{SLUG}.pptx {오늘 날짜 YYYY.MM.DD}
+```
 
-## 8. index.html 갱신
+`scripts/make_pptx.py`는 STEP 4에서 저장한 JSON을 그대로 읽어 같은 색상·구조(헤더, 3줄 요약, 유통업계/타산업군 두 섹션, CHECK 배지, 담당자 코멘트 슬라이드)를 실제 편집 가능한 텍스트박스/도형으로 재현한다. 이 저장소에는 이 pptx를 시각적으로 렌더링해서 검수할 도구(LibreOffice 등)가 없으므로, 생성 후 아래로 텍스트 내용과 좌표 범위만 검증한다 (내용 누락, 잘못된 순서, 슬라이드 밖으로 벗어난 도형이 없는지):
+
+```bash
+.venv/bin/python -c "
+from pptx import Presentation
+prs = Presentation('reports/{SLUG}.pptx')
+sw, sh = prs.slide_width, prs.slide_height
+for si, slide in enumerate(prs.slides):
+    for shape in slide.shapes:
+        x,y,w,h = shape.left, shape.top, shape.width, shape.height
+        if x is not None and (x<0 or y<0 or x+w>sw+1000 or y+h>sh+1000):
+            print('OUT OF BOUNDS', si+1, x,y,w,h)
+        if shape.has_text_frame and shape.text_frame.text.strip():
+            print(shape.text_frame.text.strip())
+"
+```
+텍스트가 JSON 내용과 일치하고 OUT OF BOUNDS가 없으면 통과. 문제가 있으면 `scripts/make_pptx.py`의 레이아웃 상수를 조정한다 (스크립트 상단 주석 참고).
+
+## 8. 결과 확인
+
+Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스크린샷으로 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지, PPT 링크와 담당자 코멘트 칸이 순서대로 존재하는지 육안 확인한다. `.card`가 넘치면 STEP 5로 돌아가 내용을 줄인다.
+
+## 9. index.html 갱신
 
 `index.html`의 `<div class="grid" id="archive">` 안에서:
 - 리포트가 처음이면 `<div class="empty">...</div>`를 제거
@@ -173,10 +202,10 @@ Browser 도구로 `reports/{SLUG}.html`을 1080×1350 뷰포트에서 열어 스
 </a>
 ```
 
-## 9. 배포
+## 10. 배포
 
 ```bash
-git add index.html reports/{SLUG}.html reports/{SLUG}.png reports/{SLUG}.json
+git add index.html reports/{SLUG}.html reports/{SLUG}.png reports/{SLUG}.pptx reports/{SLUG}.json
 git commit -m "Add weekly report {SLUG}"
 git push origin main
 ```
