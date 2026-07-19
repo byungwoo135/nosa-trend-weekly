@@ -114,35 +114,33 @@ EOF
   - 8개: `.items`에 `tier-c` 클래스 추가하고 `item-summary`를 반드시 1문장으로 압축
 - 그래도 넘칠 것 같으면 `.item-summary` 문장을 더 줄이거나 헤더 padding을 살짝 줄여서 **`.card`(1080×1350) 안에는 다 들어가도록** 조정한다 (조건: 카드 한 장에 모든 내용이 요약돼 들어가야 함). `.card` 바깥(아래에 새로 붙는 `.opinion-section`)까지 넘치는 건 정상이며 문제가 아니다 — 카드 자체만 1350px를 넘지 않으면 된다.
 - **`html, body`에 `overflow: hidden`이나 고정 `height: 1350px`를 절대 다시 추가하지 않는다.** 이 페이지는 PNG 캡처(카드 부분만) 용도와 사람이 브라우저로 직접 열어보는 용도를 겸하는데, `overflow: hidden`을 넣으면 브라우저 창이 1350px보다 작을 때 카드 아래(타 산업군 뒷부분, 담당자 코멘트 칸)를 스크롤해서 볼 수 없게 된다. 캡처는 `.card`가 정확히 1080×1350이고 Playwright 뷰포트도 1080×1350이라 `overflow: hidden` 없이도 카드 부분만 정확히 잘려서 찍힌다.
-- `.card`가 끝난 `</div>` 바로 다음에 담당자 코멘트 영역을 먼저 추가한다 (아바타 이미지와 문구는 고정, 매주 그대로 복사) — **`.body`의 `gap` 값과 동일하게 `.opinion-section`의 위쪽 여백을 맞춘다** (예: 그 리포트의 `.body { gap: 16px }`이면 `.opinion-section { margin: 16px auto 0; }`로, 유통업계↔타산업군 사이 간격과 카드↔코멘트 칸 간격이 시각적으로 동일해야 한다):
+- `.card`가 끝난 `</div>` 바로 다음에 담당자 코멘트 영역을 먼저 추가한다 (아바타 이미지와 문구는 고정, 매주 그대로 복사) — **`.body`의 `gap` 값과 동일하게 `.opinion-section`의 위쪽 여백을 맞춘다** (예: 그 리포트의 `.body { gap: 16px }`이면 `.opinion-section { margin: 16px auto 0; }`로, 유통업계↔타산업군 사이 간격과 카드↔코멘트 칸 간격이 시각적으로 동일해야 한다). **`contenteditable="true"`는 반드시 `.opinion-content`에만 건다 — `.opinion-box`나 그 상위 요소에 걸면 안 된다.** (한 번 `.opinion-box` 전체에 걸었다가, 그 안에 있던 저장 버튼이 클릭 대신 "드래그 가능한 콘텐츠"로 동작해버려 아예 눌리지 않는 사고가 있었다. 저장 버튼은 애초에 이 영역 밖(STEP 5의 내보내기 링크 행)에 두므로 이 문제가 재발할 일은 없지만, 혹시라도 버튼류를 `.opinion-box` 안에 새로 추가할 일이 있으면 반드시 contenteditable 영역 밖에 둘 것):
   ```html
   <div class="opinion-section">
-    <div class="opinion-box" contenteditable="true">
+    <div class="opinion-box">
       <div class="opinion-header">
         <div class="opinion-avatar">
           <img src="assets/avatar.jpg" alt="담당자" />
         </div>
         <div class="opinion-title">📝 담당자 코멘트</div>
       </div>
-      <div class="opinion-content" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
-      <div class="opinion-save-row">
-        <span class="opinion-save-status"></span>
-        <button type="button" class="opinion-save-btn" onclick="window.__nosaSaveComment()" title="이 코멘트를 저장">💾 저장</button>
-      </div>
+      <div class="opinion-content" contenteditable="true" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
     </div>
   </div>
   ```
-  아바타는 `reports/assets/avatar.jpg`(사용자가 지정한 실제 사진, 정사각형으로 잘라둔 것)를 그대로 참조한다 — 새로 그리거나 대체하지 않는다. `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있고, 옆의 "💾 저장" 버튼을 누르면 `reports/assets/save-comment.js`가 GitHub API로 그 리포트 HTML 파일의 `opinion-content`를 실제로 커밋해 영구 반영한다 (처음 누르면 브라우저가 이 저장소 쓰기 권한이 있는 GitHub fine-grained PAT를 한 번 물어보고, 이후엔 그 브라우저에 저장돼 다시 묻지 않는다). 이 버튼/스크립트는 절대 생략하지 않는다.
-- 그다음(담당자 코멘트 영역 **아래**) 내보내기 링크 행을 추가한다. 배경색·필박스 없이 흐린 회색 글자로, 문구에 "다운로드"라는 단어는 절대 쓰지 않는다:
+  아바타는 `reports/assets/avatar.jpg`(사용자가 지정한 실제 사진, 정사각형으로 잘라둔 것)를 그대로 참조한다 — 새로 그리거나 대체하지 않는다. `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다).
+- 그다음(담당자 코멘트 영역 **아래**) 내보내기 링크 행에 PPT/이미지 링크와 함께 "💾 저장" 버튼을 **같은 줄, 같은 흐린 스타일로** 넣는다 — 저장 버튼이 코멘트 칸 안에서 튀어 보이면 안 되고, PPT/이미지 링크와 구분 안 갈 정도로 자연스럽게 섞여 있어야 한다 (리포트를 공유했을 때 "저장" 글자가 눈에 띄면 안 됨). 배경색·테두리 없이 흐린 회색 글자로, 문구에 "다운로드"라는 단어는 절대 쓰지 않는다:
   ```html
   <div class="export-links-row">
     <a class="export-link" href="{{REPORT_FILENAME_BASE}}.pptx">📊 PPT로 보기</a>
     <a class="export-link" href="{{REPORT_FILENAME_BASE}}_full.png">🖼️ 이미지로 보기</a>
+    <button type="button" class="opinion-save-btn" onclick="window.__nosaSaveComment()" title="담당자 코멘트 저장">💾 저장</button>
+    <span class="opinion-save-status"></span>
   </div>
   <script>window.__NOSA_REPORT_PATH = "reports/{{REPORT_FILENAME_BASE}}.html";</script>
   <script src="assets/save-comment.js"></script>
   ```
-  `window.__NOSA_REPORT_PATH`는 `</body>` 바로 앞, `save-comment.js`를 불러오기 전에 반드시 그 주 파일 경로로 채워 넣는다 — 이 값이 저장 버튼이 실제로 커밋할 대상 파일이다. `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
+  이 버튼을 누르면 `reports/assets/save-comment.js`가 GitHub API로 그 리포트 HTML 파일의 `opinion-content`를 실제로 커밋해 영구 반영한다 (처음 누르면 브라우저가 이 저장소 쓰기 권한이 있는 GitHub fine-grained PAT를 한 번 물어보고, 이후엔 그 브라우저에 저장돼 다시 묻지 않는다). 이 버튼/스크립트는 절대 생략하지 않는다. `window.__NOSA_REPORT_PATH`는 `</body>` 바로 앞, `save-comment.js`를 불러오기 전에 반드시 그 주 파일 경로로 채워 넣는다 — 이 값이 저장 버튼이 실제로 커밋할 대상 파일이다. `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
 
 완성된 HTML을 `reports/{SLUG}.html`로 저장한다.
 
