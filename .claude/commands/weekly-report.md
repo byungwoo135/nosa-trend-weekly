@@ -97,7 +97,20 @@ EOF
 
 `summary`는 이번 주 전체(유통업계+타 산업군을 아울러)에서 HR 담당자가 반드시 알아야 할 핵심을 **정확히 3줄**로 압축한 것이다. 가장 중요한 정책 변화를 1번째 줄에, 그다음 중요한 흐름을 2·3번째 줄에 담는다. 각 줄은 카드에서 한 줄로 표시되므로 간결하게(60자 내외) 작성한다.
 
-## 5. 카드뉴스 HTML 생성
+## 5. 발행 전 JSON 검증 (필수, 건너뛰지 않는다)
+
+STEP 4에서 저장한 JSON을 HTML로 만들기 **전에** 반드시 아래를 실행해 자동 검증한다:
+
+```bash
+.venv/bin/python scripts/check_report.py reports/{SLUG}.json
+```
+
+이 스크립트는 (a) `retail`/`other` 전체에서 `source_url`이 중복된 항목이 있는지(서로 다른 기사가 실수로 같은 URL을 가리키는 경우 — 과거 실제로 발생했던 사고), (b) `source_url`이 비어있거나 `http`로 시작하지 않는 항목이 있는지, (c) 각 섹션이 최소 4건 이상인지를 검사한다.
+
+- exit code 0 (`✅ 문제 없음`)이면 STEP 6으로 진행한다.
+- exit code 1이면 출력된 문제 목록을 보고 `reports/{SLUG}.json`을 직접 고친다 (중복 링크면 해당 기사의 실제 출처를 다시 검색해서 올바른 `source_url`로 교체 — 다른 항목의 URL을 임시로 재사용하지 않는다). 고친 뒤 검증을 다시 통과할 때까지 반복한다. **이 검증을 통과하지 못한 JSON으로 HTML/PNG/PPTX를 생성하지 않는다.**
+
+## 6. 카드뉴스 HTML 생성
 
 `reports/_template.html`을 열어 구조/CSS를 그대로 유지한 채, 다음만 교체한다 (색상·서체는 Kurly Nextmile BI 가이드라인 고정값이므로 임의 변경 금지 — Main Color: Kurly Purple `#5f0080`, Sub Color: Nextmile Orange `#ff7b3c`, 국문서체 SD산돌고딕Neo1 / 영문서체 GT America):
 - `{{DATE_RANGE}}` → DATE_RANGE_LABEL
@@ -114,7 +127,7 @@ EOF
   - 8개: `.items`에 `tier-c` 클래스 추가하고 `item-summary`를 반드시 1문장으로 압축
 - 그래도 넘칠 것 같으면 `.item-summary` 문장을 더 줄이거나 헤더 padding을 살짝 줄여서 **`.card`(1080×1350) 안에는 다 들어가도록** 조정한다 (조건: 카드 한 장에 모든 내용이 요약돼 들어가야 함). `.card` 바깥(아래에 새로 붙는 `.opinion-section`)까지 넘치는 건 정상이며 문제가 아니다 — 카드 자체만 1350px를 넘지 않으면 된다.
 - **`html, body`에 `overflow: hidden`이나 고정 `height: 1350px`를 절대 다시 추가하지 않는다.** 이 페이지는 PNG 캡처(카드 부분만) 용도와 사람이 브라우저로 직접 열어보는 용도를 겸하는데, `overflow: hidden`을 넣으면 브라우저 창이 1350px보다 작을 때 카드 아래(타 산업군 뒷부분, 담당자 코멘트 칸)를 스크롤해서 볼 수 없게 된다. 캡처는 `.card`가 정확히 1080×1350이고 Playwright 뷰포트도 1080×1350이라 `overflow: hidden` 없이도 카드 부분만 정확히 잘려서 찍힌다.
-- `.card`가 끝난 `</div>` 바로 다음에 담당자 코멘트 영역을 먼저 추가한다 (아바타 이미지와 문구는 고정, 매주 그대로 복사) — **`.body`의 `gap` 값과 동일하게 `.opinion-section`의 위쪽 여백을 맞춘다** (예: 그 리포트의 `.body { gap: 16px }`이면 `.opinion-section { margin: 16px auto 0; }`로, 유통업계↔타산업군 사이 간격과 카드↔코멘트 칸 간격이 시각적으로 동일해야 한다). **`contenteditable="true"`는 반드시 `.opinion-content`에만 건다 — `.opinion-box`나 그 상위 요소에 걸면 안 된다.** (한 번 `.opinion-box` 전체에 걸었다가, 그 안에 있던 저장 버튼이 클릭 대신 "드래그 가능한 콘텐츠"로 동작해버려 아예 눌리지 않는 사고가 있었다. 저장 버튼은 애초에 이 영역 밖(STEP 5의 내보내기 링크 행)에 두므로 이 문제가 재발할 일은 없지만, 혹시라도 버튼류를 `.opinion-box` 안에 새로 추가할 일이 있으면 반드시 contenteditable 영역 밖에 둘 것):
+- `.card`가 끝난 `</div>` 바로 다음에 담당자 코멘트 영역을 먼저 추가한다 (아바타 이미지와 문구는 고정, 매주 그대로 복사) — **`.body`의 `gap` 값과 동일하게 `.opinion-section`의 위쪽 여백을 맞춘다** (예: 그 리포트의 `.body { gap: 16px }`이면 `.opinion-section { margin: 16px auto 0; }`로, 유통업계↔타산업군 사이 간격과 카드↔코멘트 칸 간격이 시각적으로 동일해야 한다). **`contenteditable="true"`는 반드시 `.opinion-content`에만 건다 — `.opinion-box`나 그 상위 요소에 걸면 안 된다.** (한 번 `.opinion-box` 전체에 걸었다가, 그 안에 있던 저장 버튼이 클릭 대신 "드래그 가능한 콘텐츠"로 동작해버려 아예 눌리지 않는 사고가 있었다. 저장 버튼은 애초에 이 영역 밖(STEP 6의 내보내기 링크 행)에 두므로 이 문제가 재발할 일은 없지만, 혹시라도 버튼류를 `.opinion-box` 안에 새로 추가할 일이 있으면 반드시 contenteditable 영역 밖에 둘 것):
   ```html
   <div class="opinion-section">
     <div class="opinion-box">
@@ -140,11 +153,11 @@ EOF
   <script>window.__NOSA_REPORT_PATH = "reports/{{REPORT_FILENAME_BASE}}.html";</script>
   <script src="assets/save-comment.js"></script>
   ```
-  이 버튼을 누르면 `reports/assets/save-comment.js`가 GitHub API로 그 리포트 HTML 파일의 `opinion-content`를 실제로 커밋해 영구 반영한다 (처음 누르면 브라우저가 이 저장소 쓰기 권한이 있는 GitHub fine-grained PAT를 한 번 물어보고, 이후엔 그 브라우저에 저장돼 다시 묻지 않는다). 이 버튼/스크립트는 절대 생략하지 않는다. `window.__NOSA_REPORT_PATH`는 `</body>` 바로 앞, `save-comment.js`를 불러오기 전에 반드시 그 주 파일 경로로 채워 넣는다 — 이 값이 저장 버튼이 실제로 커밋할 대상 파일이다. `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
+  이 버튼을 누르면 `reports/assets/save-comment.js`가 GitHub API로 그 리포트 HTML 파일의 `opinion-content`를 실제로 커밋해 영구 반영한다 (처음 누르면 브라우저가 이 저장소 쓰기 권한이 있는 GitHub fine-grained PAT를 한 번 물어보고, 이후엔 그 브라우저에 저장돼 다시 묻지 않는다). 이 버튼/스크립트는 절대 생략하지 않는다. `window.__NOSA_REPORT_PATH`는 `</body>` 바로 앞, `save-comment.js`를 불러오기 전에 반드시 그 주 파일 경로로 채워 넣는다 — 이 값이 저장 버튼이 실제로 커밋할 대상 파일이다. `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 7 참고).
 
 완성된 HTML을 `reports/{SLUG}.html`로 저장한다.
 
-## 6. PNG 캡처 (카드용 + 공유용 전체 페이지)
+## 7. PNG 캡처 (카드용 + 공유용 전체 페이지)
 
 ```bash
 .venv/bin/python scripts/capture.py reports/{SLUG}.html reports/{SLUG}.png
@@ -152,7 +165,7 @@ EOF
 ```
 첫 번째는 index.html 썸네일/카드뉴스 공유용 1080×1350 카드만, 두 번째는 `full` 인자로 카드+내보내기 링크+담당자 코멘트 칸까지 스크롤 없이 전체 페이지를 한 장으로 캡처한다 (`export-links-row`의 "이미지로 보기" 링크가 가리키는 파일).
 
-## 7. PPTX 생성 (편집 가능한 PPT 버전)
+## 8. PPTX 생성 (편집 가능한 PPT 버전)
 
 ```bash
 .venv/bin/python scripts/make_pptx.py reports/{SLUG}.json reports/{SLUG}.pptx {오늘 날짜 YYYY.MM.DD}
@@ -178,13 +191,13 @@ for si, slide in enumerate(prs.slides):
 ```
 텍스트가 JSON 내용과 일치하고 OUT OF BOUNDS가 없으면 통과. 헤드라인 개수만큼 하이퍼링크가 걸려 있어야 한다(기사 수와 동일). 문제가 있으면 `scripts/make_pptx.py`의 레이아웃 상수를 조정한다 (스크립트 상단 주석 참고).
 
-## 8. 결과 확인
+## 9. 결과 확인
 
-**이 단계는 반드시 STEP 6에서 이미 만든 `reports/{SLUG}.png`, `reports/{SLUG}_full.png` 파일을 Read 도구로 열어서 눈으로 확인한다 (자동 실행 중에도 항상 사용 가능한 방식). Browser 도구(mcp__Claude_Browser__*)는 대화형 세션 전용이라 예약 작업(스케줄러) 실행 중에는 쓰지 않는다** — 매주 자동 실행이 도구 권한/가용성 문제로 멈추지 않게 하기 위함이다.
+**이 단계는 반드시 STEP 7에서 이미 만든 `reports/{SLUG}.png`, `reports/{SLUG}_full.png` 파일을 Read 도구로 열어서 눈으로 확인한다 (자동 실행 중에도 항상 사용 가능한 방식). Browser 도구(mcp__Claude_Browser__*)는 대화형 세션 전용이라 예약 작업(스케줄러) 실행 중에는 쓰지 않는다** — 매주 자동 실행이 도구 권한/가용성 문제로 멈추지 않게 하기 위함이다.
 
-`reports/{SLUG}.png`를 열어 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지 확인한다. 그다음 `reports/{SLUG}_full.png`를 열어 담당자 코멘트 칸과 내보내기 링크 두 개(PPT로 보기 / 이미지로 보기)가 순서대로 있는지, 카드↔코멘트 칸 간격이 유통업계↔타산업군 간격과 비슷한지 확인한다. `.card`가 넘치면 STEP 5로 돌아가 내용을 줄인다.
+`reports/{SLUG}.png`를 열어 `.card` 영역이 스크롤 없이 한 화면에 다 들어가는지, 상단 3줄 요약 박스가 큼직하게 채워져 있는지, 두 섹션이 명확히 구분되는지, 정책 항목이 각 섹션 상단에 오는지, CHECK 배지가 실질적 연관이 있는 항목에만 붙어있는지 확인한다. 그다음 `reports/{SLUG}_full.png`를 열어 담당자 코멘트 칸과 내보내기 링크 두 개(PPT로 보기 / 이미지로 보기)가 순서대로 있는지, 카드↔코멘트 칸 간격이 유통업계↔타산업군 간격과 비슷한지 확인한다. `.card`가 넘치면 STEP 6으로 돌아가 내용을 줄인다.
 
-## 9. index.html 갱신
+## 10. index.html 갱신
 
 `index.html`의 `<div class="grid" id="archive">` 안에서:
 - 리포트가 처음이면 `<div class="empty">...</div>`를 제거
@@ -200,7 +213,7 @@ for si, slide in enumerate(prs.slides):
 </a>
 ```
 
-## 10. 배포
+## 11. 배포
 
 ```bash
 git add index.html reports/{SLUG}.html reports/{SLUG}.png reports/{SLUG}_full.png reports/{SLUG}.pptx reports/{SLUG}.json
