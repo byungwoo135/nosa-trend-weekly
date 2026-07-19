@@ -125,18 +125,24 @@ EOF
         <div class="opinion-title">📝 담당자 코멘트</div>
       </div>
       <div class="opinion-content" data-placeholder="여기를 클릭해서 의견을 작성하세요."></div>
+      <div class="opinion-save-row">
+        <span class="opinion-save-status"></span>
+        <button type="button" class="opinion-save-btn" onclick="window.__nosaSaveComment()" title="이 코멘트를 저장">💾 저장</button>
+      </div>
     </div>
   </div>
   ```
-  아바타는 `reports/assets/avatar.jpg`(사용자가 지정한 실제 사진, 정사각형으로 잘라둔 것)를 그대로 참조한다 — 새로 그리거나 대체하지 않는다. `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있지만, 정적 사이트라 새로고침하면 사라진다 — 실제로 영구히 남기려면 사람이 HTML 파일을 직접 고쳐서 커밋하거나(비개발자에게는 번거로움), PPT 버전(`.pptx`)을 열어 코멘트 슬라이드에 적는 편이 훨씬 쉽다.
+  아바타는 `reports/assets/avatar.jpg`(사용자가 지정한 실제 사진, 정사각형으로 잘라둔 것)를 그대로 참조한다 — 새로 그리거나 대체하지 않는다. `opinion-content`는 매주 항상 빈 상태로 발행한다 (내용을 임의로 채우지 않는다). `contenteditable="true"`라 페이지에서 바로 타이핑할 수 있고, 옆의 "💾 저장" 버튼을 누르면 `reports/assets/save-comment.js`가 GitHub API로 그 리포트 HTML 파일의 `opinion-content`를 실제로 커밋해 영구 반영한다 (처음 누르면 브라우저가 이 저장소 쓰기 권한이 있는 GitHub fine-grained PAT를 한 번 물어보고, 이후엔 그 브라우저에 저장돼 다시 묻지 않는다). 이 버튼/스크립트는 절대 생략하지 않는다.
 - 그다음(담당자 코멘트 영역 **아래**) 내보내기 링크 행을 추가한다. 배경색·필박스 없이 흐린 회색 글자로, 문구에 "다운로드"라는 단어는 절대 쓰지 않는다:
   ```html
   <div class="export-links-row">
     <a class="export-link" href="{{REPORT_FILENAME_BASE}}.pptx">📊 PPT로 보기</a>
     <a class="export-link" href="{{REPORT_FILENAME_BASE}}_full.png">🖼️ 이미지로 보기</a>
   </div>
+  <script>window.__NOSA_REPORT_PATH = "reports/{{REPORT_FILENAME_BASE}}.html";</script>
+  <script src="assets/save-comment.js"></script>
   ```
-  `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
+  `window.__NOSA_REPORT_PATH`는 `</body>` 바로 앞, `save-comment.js`를 불러오기 전에 반드시 그 주 파일 경로로 채워 넣는다 — 이 값이 저장 버튼이 실제로 커밋할 대상 파일이다. `.card`, `.opinion-section`, `.export-links-row` 모두 PNG 카드 캡처 밖에 있다 (전체 페이지 캡처에는 포함됨, STEP 6 참고).
 
 완성된 HTML을 `reports/{SLUG}.html`로 저장한다.
 
